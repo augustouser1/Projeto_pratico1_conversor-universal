@@ -1,10 +1,11 @@
 # ==========================================
 # src/main.py
-# PONTO DE ENTRADA E GERENCIADOR DE FLUXO
+# PONTO DE ENTRADA E GERENCIADOR DE FLUXO (F1 ao F10)
 # ==========================================
 
 import sys
 import csv
+import random
 
 from parser import validar_base, validar_entrada
 from conversor import (
@@ -25,17 +26,17 @@ def processar_parte_inteira(valor_str, origem, destino, trace):
 
     # [F3 e F4] Rotas diretas sem passar pelo decimal
     if origem == 2 and destino in (8, 16):
-        if trace: exibir_trace_agrupamento(valor_str, origem, destino) # <-- Chamada do trace inserida
+        if trace: exibir_trace_agrupamento(valor_str, origem, destino)
         bits = 3 if destino == 8 else 4
         return binario_para_agrupado(valor_str, bits)
     
     if origem in (8, 16) and destino == 2:
-        if trace: exibir_trace_agrupamento(valor_str, origem, destino) # <-- Chamada do trace inserida
+        if trace: exibir_trace_agrupamento(valor_str, origem, destino)
         bits = 3 if origem == 8 else 4
         return agrupado_para_binario(valor_str, bits)
         
     if origem in (8, 16) and destino in (8, 16):
-        if trace: exibir_trace_agrupamento(valor_str, origem, destino) # <-- Chamada do trace inserida
+        if trace: exibir_trace_agrupamento(valor_str, origem, destino)
         return octal_hex_intermediario(valor_str, origem, destino)
 
     # [F1 e F2] Rotas passando pelo decimal
@@ -51,7 +52,7 @@ def processar_parte_inteira(valor_str, origem, destino, trace):
         exibir_trace_divisao(valor_decimal, destino)
 
     return decimal_para_base_inteiro(valor_decimal, destino)
-    
+
 def processar_parte_fracionaria(valor_str, origem, destino, trace):
     """Orquestra a conversão da parte fracionária (F6)."""
     if not valor_str or valor_str == "0":
@@ -179,20 +180,102 @@ def executar_modo_batch():
     except FileNotFoundError:
         print(f"\n[ERRO] O arquivo '{caminho_entrada}' não foi encontrado.")
 
+def executar_modo_quiz():
+    """[F9] Modo Quiz com 5 níveis de dificuldade."""
+    print("\n--- MODO QUIZ (F9) ---")
+    print("Nível 1: Muito Fácil (0 a 15)")
+    print("Nível 2: Fácil (16 a 255)")
+    print("Nível 3: Médio (256 a 4095)")
+    print("Nível 4: Difícil (4096 a 65535)")
+    print("Nível 5: Soulslike (65536+)")
+    
+    try:
+        nivel = int(input("\nEscolha a dificuldade (1-5): "))
+        if nivel not in [1, 2, 3, 4, 5]:
+            print("Nível inválido.")
+            return
+    except ValueError:
+        print("Entrada inválida.")
+        return
+
+    limites = {
+        1: (0, 15), 
+        2: (16, 255), 
+        3: (256, 4095), 
+        4: (4096, 65535), 
+        5: (65536, 1048575)
+    }
+    min_val, max_val = limites[nivel]
+    bases = [2, 8, 10, 16]
+    pontuacao = 0
+    
+    while True:
+        # Sorteia um número decimal e duas bases diferentes
+        valor_dec = random.randint(min_val, max_val)
+        b_orig = random.choice(bases)
+        b_dest = random.choice([b for b in bases if b != b_orig])
+        
+        # Gera as strings formatadas para a pergunta
+        str_origem = str(valor_dec) if b_orig == 10 else decimal_para_base_inteiro(valor_dec, b_orig)
+        resposta_certa = str(valor_dec) if b_dest == 10 else decimal_para_base_inteiro(valor_dec, b_dest)
+        
+        print(f"\nConverta o valor {str_origem} da Base {b_orig} para a Base {b_dest}.")
+        resposta = input("Sua resposta (ou 'S' para sair): ").strip().upper()
+        
+        if resposta == 'S':
+            print(f"\nQuiz encerrado! Sua pontuação final: {pontuacao}")
+            break
+            
+        if resposta == resposta_certa:
+            print("CORRETO! Você ganhou +1 ponto.")
+            pontuacao += 1
+        else:
+            print(f"ERRADO! A resposta correta era: {resposta_certa}")
+            print(f"Sua pontuação atual é: {pontuacao}")
+
+def executar_calculadora_maximos():
+    """[F10] Calculadora de máximos: mostra o maior valor representável com k bits."""
+    print("\n--- CALCULADORA DE MÁXIMOS (F10) ---")
+    try:
+        k = int(input("Digite o número de bits (k): "))
+        if k <= 0:
+            print("O número de bits deve ser positivo.")
+            return
+            
+        # A fórmula universal para o valor máximo: 2^k - 1
+        max_dec = (2 ** k) - 1
+        
+        print(f"\nO maior valor representável com {k} bits é:")
+        print(f" Binário (Base 2)     : {decimal_para_base_inteiro(max_dec, 2)}")
+        print(f" Octal (Base 8)       : {decimal_para_base_inteiro(max_dec, 8)}")
+        print(f" Decimal (Base 10)    : {max_dec}")
+        print(f" Hexadecimal (Base 16): {decimal_para_base_inteiro(max_dec, 16)}")
+        
+    except ValueError:
+        print("Entrada inválida. Digite um número inteiro.")
+
 def menu_principal():
     """Loop principal do programa."""
     while True:
-        print("\nEscolha um modo de operação:")
+        print("\n" + "="*45)
+        print(" MENU PRINCIPAL ".center(45))
+        print("="*45)
         print("1. Modo Interativo (F1 a F7)")
         print("2. Modo Batch CSV (F8)")
+        print("3. Modo Quiz (F9)")
+        print("4. Calculadora de Máximos (F10)")
         print("0. Sair")
         
-        opcao = input("Opção: ").strip()
+        opcao = input("\nOpção: ").strip()
         
         if opcao == '1':
             executar_conversao_interativa()
         elif opcao == '2':
             executar_modo_batch()
+        elif opcao == '3':
+            executar_modo_quiz()
+        elif opcao == '4':
+            executar_calculadora_maximos()
         elif opcao == '0':
             print("Encerrando o programa. Até logo!")
             sys.exit(0)
@@ -205,5 +288,3 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("\n[!] Programa interrompido pelo usuário.")
         sys.exit(0)
-        
-      
