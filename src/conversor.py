@@ -4,14 +4,14 @@
 # ==========================================
 
 def caractere_para_valor(c):
-    """Mapeia um caractere (0-9, A-F, a-f) para seu valor numérico usando tabela ASCII."""
+    """Mapeia um caractere (0-9, A-F, a-f) para seu valor numerico usando tabela ASCII."""
     ord_c = ord(c.upper())
     if 48 <= ord_c <= 57: return ord_c - 48    # 0-9
     if 65 <= ord_c <= 70: return ord_c - 55    # A-F
     return -1
 
 def valor_para_caractere(v):
-    """Mapeia um valor numérico (0-15) para seu caractere correspondente."""
+    """Mapeia um valor numerico (0-15) para seu caractere correspondente."""
     if 0 <= v <= 9: return chr(v + 48)
     if 10 <= v <= 15: return chr(v + 55)
     return '?'
@@ -22,7 +22,7 @@ def valor_para_caractere(v):
 
 def decimal_para_base_inteiro(valor_decimal, base_destino):
     """
-    [F1] Converte Decimal para qualquer base usando divisões sucessivas.
+    [F1] Converte Decimal para qualquer base usando divisoes sucessivas.
     """
     if valor_decimal == 0:
         return "0"
@@ -37,16 +37,14 @@ def decimal_para_base_inteiro(valor_decimal, base_destino):
 
 def base_para_decimal_inteiro(string_valor, base_origem):
     """
-    [F2] Converte qualquer base para Decimal usando somatório posicional.
+    [F2] Converte qualquer base para Decimal usando somatorio posicional.
     """
     resultado = 0
     potencia = 0
     
-    # Percorre a string de trás para frente
     for i in range(len(string_valor) - 1, -1, -1):
         valor = caractere_para_valor(string_valor[i])
         
-        # Calcula base^potencia manualmente para evitar funções prontas complexas
         mult = 1
         for _ in range(potencia):
             mult *= base_origem
@@ -57,55 +55,79 @@ def base_para_decimal_inteiro(string_valor, base_origem):
     return resultado
 
 # ==========================================
-# REQUISITOS F3 e F4: AGRUPAMENTO DE BITS
+# REQUISITOS F3 e F4: AGRUPAMENTO DE BITS 
 # ==========================================
 
 def binario_para_agrupado(bin_str, bits_por_grupo):
     """
-    [F3] Converte Binário para Octal (3 bits) ou Hexadecimal (4 bits) por agrupamento.
+    [F3] Converte Binario para Octal ou Hexadecimal mapeando por dicionarios.
     """
-    # Preenche com zeros à esquerda para fechar os grupos perfeitamente
     faltam = len(bin_str) % bits_por_grupo
     if faltam != 0:
         bin_str = ("0" * (bits_por_grupo - faltam)) + bin_str
         
     resultado = ""
-    for i in range(0, len(bin_str), bits_por_grupo):
-        grupo = bin_str[i:i+bits_por_grupo]
-        # Calcula o valor do pequeno grupo
-        val_grupo = base_para_decimal_inteiro(grupo, 2)
-        resultado += valor_para_caractere(val_grupo)
-        
+    
+    if bits_por_grupo == 3: # Rota Octal
+        tabela_bin_oct = {
+            '000': '0', '001': '1', '010': '2', '011': '3',
+            '100': '4', '101': '5', '110': '6', '111': '7'
+        }
+        for i in range(0, len(bin_str), 3):
+            grupo = bin_str[i:i+3]
+            resultado += tabela_bin_oct.get(grupo, '')
+            
+    else: # Rota Hexadecimal
+        tabela_bin_hex = {
+            '0000': '0', '0001': '1', '0010': '2', '0011': '3',
+            '0100': '4', '0101': '5', '0110': '6', '0111': '7',
+            '1000': '8', '1001': '9', '1010': 'A', '1011': 'B',
+            '1100': 'C', '1101': 'D', '1110': 'E', '1111': 'F'
+        }
+        for i in range(0, len(bin_str), 4):
+            grupo = bin_str[i:i+4]
+            resultado += tabela_bin_hex.get(grupo, '')
+            
     return resultado
 
 def agrupado_para_binario(valor_str, bits_por_grupo):
     """
-    [F4 Auxiliar] Converte Octal/Hexadecimal para Binário expandindo cada dígito.
+    [F4 Auxiliar] Converte Octal/Hexadecimal para Binario mapeando por dicionarios.
     """
     resultado = ""
-    for char in valor_str:
-        val_dec = caractere_para_valor(char)
-        bin_grupo = decimal_para_base_inteiro(val_dec, 2)
-        
-        # Preenche com zeros à esquerda para manter o tamanho do grupo (ex: 3 vira 011)
-        bin_grupo = ("0" * (bits_por_grupo - len(bin_grupo))) + bin_grupo
-        resultado += bin_grupo
-        
-    # Remove zeros à esquerda desnecessários no resultado final
+    
+    if bits_por_grupo == 3: # Rota Octal
+        tabela_oct_bin = {
+            '0': '000', '1': '001', '2': '010', '3': '011',
+            '4': '100', '5': '101', '6': '110', '7': '111'
+        }
+        for char in valor_str.upper():
+            resultado += tabela_oct_bin.get(char, '')
+            
+    else: # Rota Hexadecimal
+        tabela_hex_bin = {
+            '0': '0000', '1': '0001', '2': '0010', '3': '0011',
+            '4': '0100', '5': '0101', '6': '0110', '7': '0111',
+            '8': '1000', '9': '1001', 'A': '1010', 'B': '1011',
+            'C': '1100', 'D': '1101', 'E': '1110', 'F': '1111'
+        }
+        for char in valor_str.upper():
+            resultado += tabela_hex_bin.get(char, '')
+            
     resultado = resultado.lstrip('0')
     return resultado if resultado else "0"
 
 def octal_hex_intermediario(valor_str, base_origem, base_destino):
     """
-    [F4] Converte Octal <-> Hexadecimal usando o binário como ponte.
+    [F4] Converte Octal <-> Hexadecimal usando o binario como ponte.
     """
     bits_origem = 3 if base_origem == 8 else 4
     bits_destino = 3 if base_destino == 8 else 4
     
-    # Passo 1: Vai para binário
+    # Passo 1: Vai para binario usando o seu mapeamento
     binario_ponte = agrupado_para_binario(valor_str, bits_origem)
     
-    # Passo 2: Vai do binário para o destino
+    # Passo 2: Vai do binario para o destino usando o seu mapeamento
     return binario_para_agrupado(binario_ponte, bits_destino)
 
 # ==========================================
@@ -113,7 +135,7 @@ def octal_hex_intermediario(valor_str, base_origem, base_destino):
 # ==========================================
 
 def fracionario_para_decimal(string_fracionaria, base_origem):
-    """Passo 1 do F6: Parte fracionária para decimal."""
+    """Passo 1 do F6: Parte fracionaria para decimal."""
     resultado_decimal = 0.0
     for i in range(len(string_fracionaria)):
         digito = string_fracionaria[i]
@@ -128,7 +150,7 @@ def fracionario_para_decimal(string_fracionaria, base_origem):
     return resultado_decimal
 
 def decimal_para_fracionario(valor_float, base_destino, limite_casas=16):
-    """Passo 2 do F6: Float decimal para base de destino por multiplicações sucessivas."""
+    """Passo 2 do F6: Float decimal para base de destino por multiplicacoes sucessivas."""
     resultado_str = ""
     truncado = False
     contador = 0
