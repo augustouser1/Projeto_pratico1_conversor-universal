@@ -136,6 +136,11 @@ def octal_hex_intermediario(valor_str, base_origem, base_destino):
 
 def fracionario_para_decimal(string_fracionaria, base_origem):
     """Passo 1 do F6: Parte fracionaria para decimal."""
+    
+    
+    if base_origem == 10:
+        return float("0." + string_fracionaria)
+        
     resultado_decimal = 0.0
     for i in range(len(string_fracionaria)):
         digito = string_fracionaria[i]
@@ -161,6 +166,10 @@ def decimal_para_fracionario(valor_float, base_destino, limite_casas=16):
         
         resultado_str += valor_para_caractere(parte_inteira)
         valor_float -= parte_inteira
+        
+        
+        valor_float = round(valor_float, 14)
+        
         contador += 1
         
     if valor_float > 0:
