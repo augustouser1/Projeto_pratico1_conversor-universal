@@ -42,7 +42,7 @@ Projeto_pratico1_conversor-universal/
 
 ## Avaliação e Testes Automatizados
 
-Conforme a especificação técnica, o projeto está preparado para correção massiva através de dois métodos:
+Conforme a especificação técnica, o projeto está preparado para verificação através de dois métodos:
 
 ### 1. Suíte de Testes Automatizados (32 Casos)
 A suíte de testes (`test_conversor.py`) utiliza a biblioteca `pytest` e cobre as conversões fundamentais de inteiros e fracionários, incluindo os testes de borda para truncamento. Para executar todos os testes com um único comando, garantindo o reconhecimento do módulo `src`, execute na raiz do projeto:
