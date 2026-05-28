@@ -58,4 +58,4 @@ Para testar o processamento em lote com novos dados, garanta que o arquivo de en
 ## Autores
 
 * **Augusto Corrêa Silva Bitencourt** (Ciência da Computação - 1º Período)
-* **João Pedro** (Ciência da Computação - 1º Período)
+* **João Pedro Ribeiro Santiago** (Ciência da Computação - 1º Período)
