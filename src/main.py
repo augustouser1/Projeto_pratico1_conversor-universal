@@ -54,7 +54,7 @@ def processar_parte_inteira(valor_str, origem, destino, trace):
     return decimal_para_base_inteiro(valor_decimal, destino)
 
 def processar_parte_fracionaria(valor_str, origem, destino, trace):
-    """Orquestra a conversão da parte fracionária (F6)."""
+    """conversão da parte fracionária (F6)."""
     if not valor_str or valor_str == "0":
         return "", False
 
@@ -70,7 +70,7 @@ def processar_parte_fracionaria(valor_str, origem, destino, trace):
     return res_frac_str, truncado
 
 def executar_conversao_interativa():
-    """Modo principal de interação com o usuário via terminal."""
+    """interação com o usuário via terminal."""
     print("="*45)
     print(" CONVERSOR UNIVERSAL DE BASES ".center(45))
     print("="*45)

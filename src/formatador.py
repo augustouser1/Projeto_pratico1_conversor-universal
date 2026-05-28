@@ -4,9 +4,7 @@
 # ==========================================
 
 def exibir_resultado_simples(entrada, base_origem, resultado, base_destino, truncado=False):
-    """
-    Exibe o resultado final da conversão de forma limpa e organizada.
-    """
+   
     print("\n" + "="*45)
     print(" RESULTADO DA CONVERSÃO".center(45))
     print("="*45)
@@ -19,10 +17,7 @@ def exibir_resultado_simples(entrada, base_origem, resultado, base_destino, trun
 
 
 def exibir_trace_divisao(valor_decimal, base_destino):
-    """
-    [F7] Exibe o passo-a-passo (trace) do método de divisões sucessivas.
-    Reconstrói a matemática apenas para fins de exibição visual.
-    """
+   
     print("\n--- TRACE: Divisões Sucessivas ---")
     valor = int(valor_decimal)
     
