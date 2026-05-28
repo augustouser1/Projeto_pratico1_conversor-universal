@@ -20,15 +20,16 @@ O sistema atende integralmente aos 10 requisitos funcionais (F1 a F10) exigidos 
 ## Estrutura Modular do Projeto
 
 Projeto_pratico1_conversor-universal/
-├── src/
-│   ├── parser.py       # Validação e tratamento de entradas do usuário (F5)
-│   ├── conversor.py    # Núcleo de algoritmos matemáticos (F1 a F4, F6)
-│   ├── formatador.py   # Formatação de saídas e exibição do trace (F7)
-│   └── main.py         # Orquestrador e menus interativos (F8 a F10)
-├── tests/
-│   ├── test_conversor.py   # Suíte contendo 32 casos de teste automatizados
-│   └── entrada.csv         # Arquivo modelo para execução do Modo Batch
-└── README.md
+
+├── src/    
+│        ├── parser.py       # Validação e tratamento de entradas do usuário (F5)   
+│   ├── conversor.py    # Núcleo de algoritmos matemáticos (F1 a F4, F6)   
+│   ├── formatador.py   # Formatação de saídas e exibição do trace (F7)   
+│   └── main.py         # Orquestrador e menus interativos (F8 a F10)   
+├── tests/   
+│   ├── test_conversor.py   # Suíte contendo 32 casos de teste automatizados   
+│   └── entrada.csv         # Arquivo modelo para execução do Modo Batch   
+└── README.md   
 
 
 ## 💻 Como Executar o Projeto (Modo Interativo)
