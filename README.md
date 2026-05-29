@@ -56,6 +56,9 @@ Para testar o processamento em lote com novos dados, garanta que o arquivo de en
 2. Execute o menu principal (`python3 src/main.py`) e selecione a opção de Modo Batch CSV.
 3. O sistema fará a leitura segura e exportará automaticamente o arquivo `saida.csv` na mesma pasta, contendo: `valor; base_origem; resultado; base_destino`.
 
+### Vídeo
+link do Youtube: https://youtu.be/hjdG4l4E4CY
+
 ## Autores
 
 * **Augusto Corrêa Silva Bitencourt** (Ciência da Computação - 1º Período)
